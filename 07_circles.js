@@ -118,7 +118,6 @@ function displayAnimFormat(width, height, frames) {
   console.log(frames);
 }
 
-// This example does not animate
 // particle = [position, name, radius, angle, angularSpeed]
 // angle and angular speed in radians
 function main() {

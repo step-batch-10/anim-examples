@@ -88,12 +88,32 @@ function degreesToRadians(degrees) {
   return degrees * Math.PI / 180;
 }
 
-function animate(screen, particle, steps) {
+function updateEntity(character) {
+  const frame = character[2];
+  const speed = character[3];
+
+  character[2] = frame + speed;
+}
+
+function putEntity(screen, character) {
+  const position = character[0];
+  const spriteSheet = character[1];
+  const frame = character[2];
+
+  const index = Math.floor(frame) % spriteSheet.length;
+  putImage(screen, spriteSheet[index], position[0], position[1]);
+}
+
+function animate(screen, entities, steps) {
   let frames = '';
   for (let i = 0; i < steps; i++) {
     clearScreen(screen);
-    putParticle(screen, particle);
-    updateParticle(particle);
+    for(const entity of entities) {
+      putEntity(screen, entity);
+    }
+    for(const entity of entities) {
+      updateEntity(entity);
+    }
     frames += screenToString(screen);
   }
 
@@ -105,35 +125,99 @@ function displayAnimFormat(width, height, frames) {
   console.log(frames);
 }
 
-// this example does not animate
-// Run it on the terminal and see the output
+function getSpriteSheet() {
+  const image1 = [
+    '>----',
+    '----<',
+  ];
+
+  const image2 = [
+    '->---',
+    '---<-',
+  ];
+
+  const image3 = [
+    '-->--',
+    '--<-',
+  ];
+
+  const image4 = [
+    '--->-',
+    '-<---',
+
+  ];
+
+  const image5 = [
+    '---->',
+    '<----',
+  ];
+
+  const image6 = [
+    '-----',
+    '-----',
+  ];
+
+  return [image1, image2, image3, image4, image5, image6];
+}
+
+function wavySpriteSheet() {
+  const image1 = [
+    '*....',
+    '.*...',
+    '..*..',
+    '...*.',
+    '....*',
+  ];
+  
+  const image2 = [
+    '.*...',
+    '.*...',
+    '..*..',
+    '...*.',
+    '...*.',
+  ];    
+  
+  const image3 = [
+    '..*..',
+    '..*..',
+    '..*..',
+    '..*..',
+    '..*..',
+  ];
+
+  const image4 = [
+    '...*.',
+    '..*..',
+    '..*..',
+    '..*..',
+    '.*...',
+  ];
+
+  const image5 = [
+    '....*',
+    '...*.',
+    '..*..',
+    '.*...',
+    '*....',
+  ];
+
+  return [image1, image2, image3, image4, image5, image4, image3, image2];
+}
+
+// A sprite is simply composed of many images that are displayed in sequence
 function main() {
   const WIDTH = 40;
   const HEIGHT = 20;
   const screen = createScreen(WIDTH, HEIGHT);
-  const image1 = [
-    '| |',
-    '| |',
-    '|-|',
-    '|-|',
-    '| |',
-    '| |',
-  ];
+  // try wavySpriteSheet() for a different animation
+  const spriteSheet = getSpriteSheet();
+  // [x, y], spriteSheet, frame, frameSpeed
+  const animatedEntity1 = [[10,10], spriteSheet, 0, 0.5]
+  const animatedEntity2 = [[20,10], spriteSheet, 3, 0.5]
 
-  // can also be array of arrays
-  const image2 = [
-    ['\\', ' ', '/'],
-    [' ', '|', ' '],
-    [' ', '|', ' '],
-    ['/', ' ', '\\'],
-  ]
-
-  putImage(screen, image1, 5, 2);
-  putImage(screen, image1, 15, 2);
-  putImage(screen, image1, 5, 10);
-  putImage(screen, image1, 15, 10);
-  putImage(screen, image2, 10, 7);
-  displayScreen(screen);
+  const entities = [animatedEntity1, animatedEntity2];
+  const frames = animate(screen, entities, spriteSheet.length * 2);
+  displayAnimFormat(WIDTH, HEIGHT, frames);
 }
 
 main();

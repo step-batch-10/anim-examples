@@ -84,10 +84,8 @@ function putWalker(screen, walker) {
 
 function moveWalker(walker) {
   const position = walker[0];
-  const speed = walker.at(-1);
-  // move
-  position[0] = position[0] + speed[0]; 
-  position[1] = position[1] + speed[1]; 
+  // move down - hardcoded speed
+  position[1] = position[1] + 1; 
 }
 
 function animate(screen, walker, steps) {
@@ -112,7 +110,7 @@ function main() {
   const HEIGHT = 20;
   const screen = createScreen(WIDTH, HEIGHT);
   // walker: [[x, y], char, size, [xSpeed, ySpeed]]
-  const walker = [[0, 0], 'P', 5, [0, 1]];
+  const walker = [[0, 0], 'P', 5];
 
   const frames = animate(screen, walker, 20);
   displayAnimFormat(WIDTH, HEIGHT, frames);
